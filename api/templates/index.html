@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <!-- Primary Meta Tags -->
-    <title>{{ if .Hostname }}{{ .Hostname }} DNS Analysis - Cosignals{{ else }}Cosignals - DNS Analysis Tool{{ end }}</title>
-    <meta name="title" content="{{ if .Hostname }}{{ .Hostname }} DNS Analysis - Cosignals{{ else }}Cosignals - DNS Analysis Tool{{ end }}">
+    <title>{{ if .Hostname }}{{ .Hostname }} Website Analysis - Cosignals{{ else }}Cosignals - Website Analysis Tool{{ end }}</title>
+    <meta name="title" content="{{ if .Hostname }}{{ .Hostname }} Website Analysis - Cosignals{{ else }}Cosignals - Website Analysis Tool{{ end }}">
     <meta name="description" content="{{ if .Hostname }}DNS records and provider analysis for {{ .Hostname }} - See all DNS records including A, AAAA, MX, NS, and TXT records. Find hosting providers and DNS services.{{ else }}Analyze DNS records and detect providers for any domain. Find out who hosts a website and what DNS services they use.{{ end }}">
-    <meta name="keywords" content="DNS analysis, {{ if .Hostname }}{{ .Hostname }}, {{ end }}DNS lookup, DNS providers, website hosting, domain analysis, IP ownership, MX records, NS records">
+    <meta name="keywords" content="Website Analysis, {{ if .Hostname }}{{ .Hostname }}, {{ end }}DNS lookup, DNS providers, website hosting, domain analysis, IP ownership, MX records, NS records">
     <meta name="robots" content="index, follow">
     <meta name="language" content="English">
     <meta name="author" content="Cosignals">
@@ -20,9 +20,9 @@
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="{{ if .Hostname }}https://cosignals.io/hosts/{{ .Hostname }}{{ else }}https://cosignals.io{{ end }}">
-    <meta property="og:title" content="{{ if .Hostname }}{{ .Hostname }} DNS Analysis - Cosignals{{ else }}Cosignals - DNS Analysis Tool{{ end }}">
+    <meta property="og:title" content="{{ if .Hostname }}{{ .Hostname }} Website Analysis - Cosignals{{ else }}Cosignals - Website Analysis Tool{{ end }}">
     <meta property="og:description" content="{{ if .Hostname }}DNS records and provider analysis for {{ .Hostname }} - See all hosting and DNS providers.{{ else }}Analyze DNS records and detect providers for any domain.{{ end }}">
-    <meta property="og:site_name" content="Cosignals DNS Analysis">
+    <meta property="og:site_name" content="Cosignals Website Analysis">
     {{ if .Data }}
     <meta property="og:image" content="https://cosignals.io/img/cosignals-preview.png">
     {{ range .Data.Providers }}
@@ -33,12 +33,12 @@
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="{{ if .Hostname }}https://cosignals.io/hosts/{{ .Hostname }}{{ else }}https://cosignals.io{{ end }}">
-    <meta property="twitter:title" content="{{ if .Hostname }}{{ .Hostname }} DNS Analysis - Cosignals{{ else }}Cosignals - DNS Analysis Tool{{ end }}">
+    <meta property="twitter:title" content="{{ if .Hostname }}{{ .Hostname }} Website Analysis - Cosignals{{ else }}Cosignals - Website Analysis Tool{{ end }}">
     <meta property="twitter:description" content="{{ if .Hostname }}DNS records and provider analysis for {{ .Hostname }}{{ else }}Analyze DNS records and detect providers for any domain{{ end }}">
     <meta property="twitter:image" content="https://cosignals.io/img/cosignals-preview.png">
     
     <!-- Google Specific -->
-    <meta itemprop="name" content="{{ if .Hostname }}{{ .Hostname }} DNS Analysis - Cosignals{{ else }}Cosignals - DNS Analysis Tool{{ end }}">
+    <meta itemprop="name" content="{{ if .Hostname }}{{ .Hostname }} Website Analysis - Cosignals{{ else }}Cosignals - Website Analysis Tool{{ end }}">
     <meta itemprop="description" content="{{ if .Hostname }}DNS records and provider analysis for {{ .Hostname }}{{ else }}Analyze DNS records and detect providers for any domain{{ end }}">
     <meta itemprop="image" content="https://cosignals.io/img/cosignals-preview.png">
     
@@ -47,7 +47,7 @@
     {
       "@context": "https://schema.org",
       "@type": "WebApplication",
-      "name": "Cosignals DNS Analysis Tool",
+      "name": "Cosignals Website Analysis Tool",
       "url": "https://cosignals.io",
       "description": "Analyze DNS records and detect providers for any domain",
       "applicationCategory": "WebTool",
@@ -59,7 +59,7 @@
       }{{ if .Hostname }},
       "mainEntity": {
         "@type": "Thing",
-        "name": "{{ .Hostname }} DNS Analysis",
+        "name": "{{ .Hostname }} Website Analysis",
         "description": "DNS records and provider analysis for {{ .Hostname }}"
       }{{ end }}
     }
@@ -298,7 +298,7 @@
 </head>
 <body>
     <header>
-        <h1>{{ if .Hostname }}DNS Analysis for {{ .Hostname }}{{ else }}Cosignals DNS Analysis Tool{{ end }}</h1>
+        <h1>{{ if .Hostname }}Website Analysis for {{ .Hostname }}{{ else }}Cosignals Website Analysis Tool{{ end }}</h1>
         <p class="subtitle">{{ if .Hostname }}View detailed DNS records and provider information{{ else }}Analyze DNS records and detect providers for any domain{{ end }}</p>
     </header>
     
@@ -321,7 +321,7 @@
     {{ if .Hostname }}
     <main>
         <section class="results" id="results">
-            <h2>DNS Analysis Results for {{ .Hostname }}</h2>
+            <h2>Website Analysis Results for {{ .Hostname }}</h2>
         
         <div class="provider-list">
             <h3>Detected Providers:</h3>
@@ -375,7 +375,7 @@
     {{ else }}
     <section class="info-section">
         <h2>What is Cosignals?</h2>
-        <p>Cosignals is a DNS analysis tool that helps you discover which providers and services are used by any domain. Our tool analyzes DNS records including A, AAAA, MX, NS, and TXT records to identify hosting providers, email services, and other technology providers.</p>
+        <p>Cosignals is a Website Analysis tool that helps you discover which providers and services are used by any domain. Our tool analyzes DNS records including A, AAAA, MX, NS, and TXT records to identify hosting providers, email services, and other technology providers.</p>
         
         <h3>How It Works</h3>
         <p>Simply enter a domain name above and our tool will:</p>
@@ -399,7 +399,7 @@
     {{ end }}
     
     <footer>
-        <p>&copy; 2025 Cosignals - DNS Analysis Tool</p>
+        <p>&copy; 2025 Cosignals.com - Website Analysis Tool</p>
     </footer>
     
     <script>

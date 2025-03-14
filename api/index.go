@@ -11,6 +11,7 @@ import (
 	"net"
 	"net/http"
 	"net/url"
+	"sort"
 	"strings"
 	"sync"
 	"time"
@@ -383,12 +384,25 @@ func fetchDNSData(hostname string, startTime time.Time) *JSONOutput {
 
 	elapsed := time.Since(startTime)
 
-	// Add providers to the output
+	// Add providers to the output - sort alphabetically
+	var sortedProviders []string
 	for provider := range uniqueProviders {
-		output.Providers = append(output.Providers, provider)
+		sortedProviders = append(sortedProviders, provider)
 	}
+	// Sort providers alphabetically
+	sort.Strings(sortedProviders)
+	output.Providers = sortedProviders
+	
+	// Sort DNS records by Type and then by record data
+	sort.Slice(output.Records, func(i, j int) bool {
+		if output.Records[i].Type != output.Records[j].Type {
+			return output.Records[i].Type < output.Records[j].Type
+		}
+		return output.Records[i].Data < output.Records[j].Data
+	})
+	
 	output.QueryTime = elapsed.String()
-
+	
 	return output
 }
 
