@@ -141,10 +141,8 @@
     </div>
     
     <script>
-        document.getElementById('analyze').addEventListener('click', async function() {
-            const hostname = document.getElementById('hostname').value.trim();
-            const provider = document.getElementById('provider').value;
-            
+        // Function to analyze a domain
+        async function analyzeDomain(hostname, provider) {
             // Reset previous results
             document.getElementById('results').style.display = 'none';
             document.getElementById('error').textContent = '';
@@ -153,6 +151,9 @@
                 document.getElementById('error').textContent = 'Please enter a domain name';
                 return;
             }
+            
+            // Update the input field with the hostname
+            document.getElementById('hostname').value = hostname;
             
             // Show loading indicator
             document.getElementById('loading').style.display = 'block';
@@ -219,10 +220,46 @@
                 // Show results
                 document.getElementById('results').style.display = 'block';
                 
+                // Update URL to reflect the hostname
+                updateURL(hostname);
+                
             } catch (error) {
                 document.getElementById('loading').style.display = 'none';
                 document.getElementById('error').textContent = error.message || 'Error analyzing domain';
                 console.error(error);
+            }
+        }
+        
+        // Function to update the URL without reloading the page
+        function updateURL(hostname) {
+            const url = new URL(window.location);
+            
+            // Change the pathname to /hosts/{hostname}
+            url.pathname = `/hosts/${hostname}`;
+            
+            // Update the URL without triggering a page reload
+            window.history.pushState({}, '', url);
+        }
+        
+        // Check if we have a hostname in the URL path
+        function getHostnameFromURL() {
+            const path = window.location.pathname;
+            const match = path.match(/^\/hosts\/([^\/]+)$/);
+            
+            if (match && match[1]) {
+                return decodeURIComponent(match[1]);
+            }
+            
+            return null;
+        }
+        
+        // When the analyze button is clicked
+        document.getElementById('analyze').addEventListener('click', function() {
+            const hostname = document.getElementById('hostname').value.trim();
+            const provider = document.getElementById('provider').value;
+            
+            if (hostname) {
+                analyzeDomain(hostname, provider);
             }
         });
         
@@ -230,6 +267,28 @@
         document.getElementById('hostname').addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 document.getElementById('analyze').click();
+            }
+        });
+        
+        // On page load, check for hostname in URL
+        window.addEventListener('load', function() {
+            const hostname = getHostnameFromURL();
+            if (hostname) {
+                const provider = document.getElementById('provider').value;
+                analyzeDomain(hostname, provider);
+            }
+        });
+        
+        // Handle browser back/forward navigation
+        window.addEventListener('popstate', function() {
+            const hostname = getHostnameFromURL();
+            if (hostname) {
+                const provider = document.getElementById('provider').value;
+                analyzeDomain(hostname, provider);
+            } else {
+                // Clear the results if we're back at the homepage
+                document.getElementById('results').style.display = 'none';
+                document.getElementById('hostname').value = '';
             }
         });
     </script>
