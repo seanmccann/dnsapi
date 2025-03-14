@@ -169,6 +169,21 @@ func findIPOwner(ip string, blocks []IPBlock) string {
 	return "Unknown"
 }
 
+// JSONOutput represents the structure of the JSON response
+type JSONOutput struct {
+	Hostname  string         `json:"hostname"`
+	Records   []RecordOutput `json:"records"`
+	Providers []string       `json:"providers"`
+	QueryTime string         `json:"query_time"`
+}
+
+// RecordOutput represents a single DNS record in the output
+type RecordOutput struct {
+	Type     string `json:"type"`
+	Data     string `json:"data"`
+	Provider string `json:"provider,omitempty"`
+}
+
 func main() {
 	startTime := time.Now()
 	provider := flag.String("provider", "google", "DNS provider (cloudflare or google)")
@@ -183,14 +198,14 @@ func main() {
 	// Load IP ownership information from embedded data
 	ipBlocks, err := loadEmbeddedIPOwners()
 	if err != nil {
-		fmt.Printf("Warning: couldn't load embedded IP owners data: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Warning: couldn't load embedded IP owners data: %v\n", err)
 		ipBlocks = []IPBlock{}
 	}
 
 	// Load DNS provider information from embedded data
 	dnsProviders, err := loadDNSProviders()
 	if err != nil {
-		fmt.Printf("Warning: couldn't load DNS providers data: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Warning: couldn't load DNS providers data: %v\n", err)
 		dnsProviders = []DNSProvider{}
 	}
 
@@ -231,44 +246,66 @@ func main() {
 		close(results)
 	}()
 
+	// Create the JSON output structure
+	output := JSONOutput{
+		Hostname:  hostname,
+		Records:   []RecordOutput{},
+		Providers: []string{},
+	}
+
+	// Track unique providers
+	uniqueProviders := make(map[string]bool)
+
 	// Process results as they arrive
 	for result := range results {
-		fmt.Printf("\n=== %s Records for %s ===\n", result.RecordName, hostname)
-
 		if result.Error != nil {
-			fmt.Printf("Error querying %s records: %v\n", result.RecordName, result.Error)
 			continue
 		}
 
 		if len(result.Response.Answer) == 0 {
-			fmt.Printf("No %s records found\n", result.RecordName)
 			continue
 		}
 
 		for _, answer := range result.Response.Answer {
+			var provider string
 			// For A records (IPv4) and AAAA records (IPv6), try to determine the owner
 			if (result.RecordName == "A" || result.RecordName == "AAAA") && len(ipBlocks) > 0 {
 				owner := findIPOwner(answer.Data, ipBlocks)
 				if owner != "Unknown" {
-					fmt.Printf("%s (%s)\n", answer.Data, owner)
-				} else {
-					fmt.Printf("%s\n", answer.Data)
+					provider = owner
+					uniqueProviders[owner] = true
 				}
 			} else if (result.RecordName == "MX" || result.RecordName == "NS" || result.RecordName == "TXT") && len(dnsProviders) > 0 {
-				provider := identifyDNSProvider(answer.Data, result.RecordName, dnsProviders)
-				if provider != "" {
-					fmt.Printf("%s (%s)\n", answer.Data, provider)
-				} else {
-					fmt.Printf("%s\n", answer.Data)
+				providerName := identifyDNSProvider(answer.Data, result.RecordName, dnsProviders)
+				if providerName != "" {
+					provider = providerName
+					uniqueProviders[providerName] = true
 				}
-			} else {
-				fmt.Printf("%s\n", answer.Data)
 			}
+
+			// Add to JSON output
+			output.Records = append(output.Records, RecordOutput{
+				Type:     result.RecordName,
+				Data:     answer.Data,
+				Provider: provider,
+			})
 		}
 	}
 
 	elapsed := time.Since(startTime)
-	fmt.Printf("\nTotal query time: %s\n", elapsed)
+	
+	// Add providers to the output
+	for provider := range uniqueProviders {
+		output.Providers = append(output.Providers, provider)
+	}
+	output.QueryTime = elapsed.String()
+	
+	// Output the JSON
+	encoder := json.NewEncoder(os.Stdout)
+	encoder.SetIndent("", "  ")
+	if err := encoder.Encode(output); err != nil {
+		fmt.Fprintf(os.Stderr, "Error encoding JSON: %v\n", err)
+	}
 }
 
 func queryDoH(dohURL, hostname string, recordType int) (*DNSResponse, error) {
