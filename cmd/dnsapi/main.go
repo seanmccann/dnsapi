@@ -191,7 +191,7 @@ func main() {
 
 	args := flag.Args()
 	if len(args) < 1 {
-		fmt.Println("Usage: goalie [--provider=cloudflare|google] <hostname>")
+		fmt.Println("Usage: dnsapi [--provider=cloudflare|google] <hostname>")
 		os.Exit(1)
 	}
 
@@ -293,13 +293,13 @@ func main() {
 	}
 
 	elapsed := time.Since(startTime)
-	
+
 	// Add providers to the output
 	for provider := range uniqueProviders {
 		output.Providers = append(output.Providers, provider)
 	}
 	output.QueryTime = elapsed.String()
-	
+
 	// Output the JSON
 	encoder := json.NewEncoder(os.Stdout)
 	encoder.SetIndent("", "  ")

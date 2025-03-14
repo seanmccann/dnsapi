@@ -1,4 +1,4 @@
-# Goalie - DNS Analysis Tool
+# DnsAPI - DNS Analysis Tool
 
 A Go tool for DNS lookups over HTTPS (DoH) that identifies hosting and service providers based on DNS records.
 
@@ -6,10 +6,10 @@ A Go tool for DNS lookups over HTTPS (DoH) that identifies hosting and service p
 
 ```bash
 # Basic usage (defaults to Cloudflare DoH)
-go run cmd/goalie/main.go example.com
+go run cmd/dnsapi/main.go example.com
 
 # Use Google DoH instead
-go run cmd/goalie/main.go --provider=google example.com
+go run cmd/dnsapi/main.go --provider=google example.com
 ```
 
 The tool will query the following DNS record types:
@@ -106,5 +106,5 @@ This will start a local development server that mimics the Vercel production env
 ## Building the CLI version
 
 ```bash
-go build -o goalie cmd/goalie/main.go
+go build -o dnsapi cmd/dnsapi/main.go
 ```# dnsapi

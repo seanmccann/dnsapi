@@ -1,3 +1,3 @@
-module github.com/seanmccann/dnsapi/api
+module dnsapi/api
 
-go 1.22
+go 1.21
