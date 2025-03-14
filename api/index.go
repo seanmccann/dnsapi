@@ -1,4 +1,4 @@
-package handler
+package api
 
 import (
 	"context"
@@ -182,8 +182,8 @@ type RecordOutput struct {
 	Provider string `json:"provider,omitempty"`
 }
 
-// Handle function for Vercel serverless function
-func Handle(w http.ResponseWriter, r *http.Request) {
+// Handler function for Vercel serverless function
+func Handler(w http.ResponseWriter, r *http.Request) {
 	startTime := time.Now()
 
 	// Set CORS headers to allow all origins
