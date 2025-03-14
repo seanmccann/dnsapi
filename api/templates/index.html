@@ -296,7 +296,7 @@
     
     <section class="search-section">
         <h2>Analyze a Domain</h2>
-        <form method="GET">
+        <form method="GET" action="/">
             <div class="input-group">
                 <label for="hostname">Domain Name:</label>
                 <input type="text" id="hostname" name="hostname" placeholder="example.com" {{ if .Hostname }}value="{{ .Hostname }}"{{ end }} />
