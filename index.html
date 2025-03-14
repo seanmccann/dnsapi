@@ -72,11 +72,18 @@
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
+            table-layout: fixed;
         }
         th, td {
             border: 1px solid #ddd;
             padding: 12px;
             text-align: left;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+        td:nth-child(2) {
+            max-width: 400px;
+            overflow-x: auto;
         }
         th {
             background-color: #f2f2f2;
