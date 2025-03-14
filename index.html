@@ -97,20 +97,14 @@
     </style>
 </head>
 <body>
-    <h1>DnsAPI - DNS Analysis Tool</h1>
+    <h1>Cosignals</h1>
     
     <div class="input-group">
         <label for="hostname">Domain Name:</label>
         <input type="text" id="hostname" placeholder="example.com" />
     </div>
     
-    <div class="input-group">
-        <label for="provider">DNS Provider:</label>
-        <select id="provider">
-            <option value="google">Google</option>
-            <option value="cloudflare">Cloudflare</option>
-        </select>
-    </div>
+    <!-- DNS provider selection removed - only using Google DNS -->
     
     <button id="analyze">Analyze Domain</button>
     
@@ -120,7 +114,6 @@
     
     <div id="results" class="results" style="display: none;">
         <h2>Results for <span id="result-hostname"></span></h2>
-        <p>Query time: <span id="query-time"></span></p>
         
         <div class="provider-list">
             <h3>Detected Providers:</h3>
@@ -138,6 +131,8 @@
             </thead>
             <tbody id="records"></tbody>
         </table>
+
+        <p>Query time: <span id="query-time"></span></p>
     </div>
     
     <script>
@@ -256,7 +251,7 @@
         // When the analyze button is clicked
         document.getElementById('analyze').addEventListener('click', function() {
             const hostname = document.getElementById('hostname').value.trim();
-            const provider = document.getElementById('provider').value;
+            const provider = "google"; // Always use Google DNS
             
             if (hostname) {
                 analyzeDomain(hostname, provider);
@@ -274,7 +269,7 @@
         window.addEventListener('load', function() {
             const hostname = getHostnameFromURL();
             if (hostname) {
-                const provider = document.getElementById('provider').value;
+                const provider = "google"; // Always use Google DNS
                 analyzeDomain(hostname, provider);
             }
         });
@@ -283,7 +278,7 @@
         window.addEventListener('popstate', function() {
             const hostname = getHostnameFromURL();
             if (hostname) {
-                const provider = document.getElementById('provider').value;
+                const provider = "google"; // Always use Google DNS
                 analyzeDomain(hostname, provider);
             } else {
                 // Clear the results if we're back at the homepage

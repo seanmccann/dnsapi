@@ -210,10 +210,7 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	provider := r.URL.Query().Get("provider")
-	if provider == "" {
-		provider = "google" // Default provider
-	}
+	// Ignoring any provider parameter - always use Google DNS
 
 	// Load IP ownership information from embedded data
 	ipBlocks, err := loadEmbeddedIPOwners()
@@ -229,10 +226,8 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 		dnsProviders = []DNSProvider{}
 	}
 
-	dohURL := cloudflareDoH
-	if provider == "google" {
-		dohURL = googleDoH
-	}
+	// Always use Google DNS
+	dohURL := googleDoH
 
 	recordTypes := map[string]int{
 		"A":    1,
