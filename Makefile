@@ -2,16 +2,16 @@
 
 # Build the application
 build:
-	go build -o bin/dnsapi ./cmd/dnsapi
+	go build -o bin/dnsapi ./api
 
 # Run the application
 run:
-	go run ./cmd/dnsapi/main.go
+	go run ./api/index.go
 
 # Run with arguments
 # Usage: make runargs ARGS="--provider=google example.com"
 runargs:
-	go run ./cmd/dnsapi/main.go $(ARGS)
+	go run ./api/index.go $(ARGS)
 
 # Clean build artifacts
 clean:
