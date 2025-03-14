@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Goalie - DNS Analysis Tool</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            color: #2c3e50;
+        }
+        .input-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="text"] {
+            padding: 8px;
+            width: 100%;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        select {
+            padding: 8px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        pre {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        .results {
+            margin-top: 30px;
+        }
+        .provider-list {
+            margin-top: 20px;
+        }
+        .provider-list span {
+            display: inline-block;
+            background-color: #e0f7fa;
+            padding: 5px 10px;
+            margin: 5px;
+            border-radius: 15px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        .loading {
+            display: none;
+            margin-top: 20px;
+            text-align: center;
+        }
+        .error {
+            color: #e74c3c;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Goalie - DNS Analysis Tool</h1>
+    
+    <div class="input-group">
+        <label for="hostname">Domain Name:</label>
+        <input type="text" id="hostname" placeholder="example.com" />
+    </div>
+    
+    <div class="input-group">
+        <label for="provider">DNS Provider:</label>
+        <select id="provider">
+            <option value="google">Google</option>
+            <option value="cloudflare">Cloudflare</option>
+        </select>
+    </div>
+    
+    <button id="analyze">Analyze Domain</button>
+    
+    <div id="loading" class="loading">Analyzing DNS records... Please wait.</div>
+    
+    <div id="error" class="error"></div>
+    
+    <div id="results" class="results" style="display: none;">
+        <h2>Results for <span id="result-hostname"></span></h2>
+        <p>Query time: <span id="query-time"></span></p>
+        
+        <div class="provider-list">
+            <h3>Detected Providers:</h3>
+            <div id="providers"></div>
+        </div>
+        
+        <h3>DNS Records:</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Type</th>
+                    <th>Data</th>
+                    <th>Provider</th>
+                </tr>
+            </thead>
+            <tbody id="records"></tbody>
+        </table>
+    </div>
+    
+    <script>
+        document.getElementById('analyze').addEventListener('click', async function() {
+            const hostname = document.getElementById('hostname').value.trim();
+            const provider = document.getElementById('provider').value;
+            
+            // Reset previous results
+            document.getElementById('results').style.display = 'none';
+            document.getElementById('error').textContent = '';
+            
+            if (!hostname) {
+                document.getElementById('error').textContent = 'Please enter a domain name';
+                return;
+            }
+            
+            // Show loading indicator
+            document.getElementById('loading').style.display = 'block';
+            
+            try {
+                const response = await fetch(`/api?hostname=${encodeURIComponent(hostname)}&provider=${provider}`);
+                
+                if (!response.ok) {
+                    throw new Error(`Error: ${response.status} ${response.statusText}`);
+                }
+                
+                const data = await response.json();
+                
+                // Hide loading indicator
+                document.getElementById('loading').style.display = 'none';
+                
+                // Display results
+                document.getElementById('result-hostname').textContent = data.hostname;
+                document.getElementById('query-time').textContent = data.query_time;
+                
+                // Display providers
+                const providersContainer = document.getElementById('providers');
+                providersContainer.innerHTML = '';
+                if (data.providers && data.providers.length > 0) {
+                    data.providers.forEach(provider => {
+                        const span = document.createElement('span');
+                        span.textContent = provider;
+                        providersContainer.appendChild(span);
+                    });
+                } else {
+                    providersContainer.textContent = 'No providers detected';
+                }
+                
+                // Display records
+                const recordsContainer = document.getElementById('records');
+                recordsContainer.innerHTML = '';
+                if (data.records && data.records.length > 0) {
+                    data.records.forEach(record => {
+                        const row = document.createElement('tr');
+                        
+                        const typeCell = document.createElement('td');
+                        typeCell.textContent = record.type;
+                        row.appendChild(typeCell);
+                        
+                        const dataCell = document.createElement('td');
+                        dataCell.textContent = record.data;
+                        row.appendChild(dataCell);
+                        
+                        const providerCell = document.createElement('td');
+                        providerCell.textContent = record.provider || 'Unknown';
+                        row.appendChild(providerCell);
+                        
+                        recordsContainer.appendChild(row);
+                    });
+                } else {
+                    const row = document.createElement('tr');
+                    const cell = document.createElement('td');
+                    cell.colSpan = 3;
+                    cell.textContent = 'No records found';
+                    row.appendChild(cell);
+                    recordsContainer.appendChild(row);
+                }
+                
+                // Show results
+                document.getElementById('results').style.display = 'block';
+                
+            } catch (error) {
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('error').textContent = error.message || 'Error analyzing domain';
+                console.error(error);
+            }
+        });
+        
+        // Allow pressing Enter in the hostname field
+        document.getElementById('hostname').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                document.getElementById('analyze').click();
+            }
+        });
+    </script>
+</body>
+</html>

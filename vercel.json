@@ -1,0 +1,21 @@
+{
+  "version": 2,
+  "buildCommand": "",
+  "installCommand": "",
+  "functions": {
+    "api/index.go": {
+      "memory": 1024,
+      "maxDuration": 10
+    }
+  },
+  "routes": [
+    {
+      "src": "/api",
+      "dest": "/api/index.go"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
+  ]
+}
