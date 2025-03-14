@@ -1,3 +1,3 @@
-module github.com/seanmccann/goalie
+module github.com/seanmccann/dnsapi
 
-go 1.22.0
+go 1.22
