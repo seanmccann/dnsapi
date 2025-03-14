@@ -3,312 +3,404 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Primary Meta Tags -->
     <title>{{ if .Hostname }}{{ .Hostname }} DNS Analysis - Cosignals{{ else }}Cosignals - DNS Analysis Tool{{ end }}</title>
-    <meta name="description" content="{{ if .Hostname }}DNS records and provider analysis for {{ .Hostname }}{{ else }}Analyze DNS records and detect providers for any domain{{ end }}">
+    <meta name="title" content="{{ if .Hostname }}{{ .Hostname }} DNS Analysis - Cosignals{{ else }}Cosignals - DNS Analysis Tool{{ end }}">
+    <meta name="description" content="{{ if .Hostname }}DNS records and provider analysis for {{ .Hostname }} - See all DNS records including A, AAAA, MX, NS, and TXT records. Find hosting providers and DNS services.{{ else }}Analyze DNS records and detect providers for any domain. Find out who hosts a website and what DNS services they use.{{ end }}">
+    <meta name="keywords" content="DNS analysis, {{ if .Hostname }}{{ .Hostname }}, {{ end }}DNS lookup, DNS providers, website hosting, domain analysis, IP ownership, MX records, NS records">
+    <meta name="robots" content="index, follow">
+    <meta name="language" content="English">
+    <meta name="author" content="Cosignals">
+    <meta name="revisit-after" content="7 days">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="{{ if .Hostname }}https://cosignals.io/hosts/{{ .Hostname }}{{ else }}https://cosignals.io{{ end }}">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ if .Hostname }}https://cosignals.io/hosts/{{ .Hostname }}{{ else }}https://cosignals.io{{ end }}">
+    <meta property="og:title" content="{{ if .Hostname }}{{ .Hostname }} DNS Analysis - Cosignals{{ else }}Cosignals - DNS Analysis Tool{{ end }}">
+    <meta property="og:description" content="{{ if .Hostname }}DNS records and provider analysis for {{ .Hostname }} - See all hosting and DNS providers.{{ else }}Analyze DNS records and detect providers for any domain.{{ end }}">
+    <meta property="og:site_name" content="Cosignals DNS Analysis">
+    {{ if .Data }}
+    <meta property="og:image" content="https://cosignals.io/img/cosignals-preview.png">
+    {{ range .Data.Providers }}
+    <meta property="article:tag" content="{{ . }}">
+    {{ end }}
+    {{ end }}
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="{{ if .Hostname }}https://cosignals.io/hosts/{{ .Hostname }}{{ else }}https://cosignals.io{{ end }}">
+    <meta property="twitter:title" content="{{ if .Hostname }}{{ .Hostname }} DNS Analysis - Cosignals{{ else }}Cosignals - DNS Analysis Tool{{ end }}">
+    <meta property="twitter:description" content="{{ if .Hostname }}DNS records and provider analysis for {{ .Hostname }}{{ else }}Analyze DNS records and detect providers for any domain{{ end }}">
+    <meta property="twitter:image" content="https://cosignals.io/img/cosignals-preview.png">
+    
+    <!-- Google Specific -->
+    <meta itemprop="name" content="{{ if .Hostname }}{{ .Hostname }} DNS Analysis - Cosignals{{ else }}Cosignals - DNS Analysis Tool{{ end }}">
+    <meta itemprop="description" content="{{ if .Hostname }}DNS records and provider analysis for {{ .Hostname }}{{ else }}Analyze DNS records and detect providers for any domain{{ end }}">
+    <meta itemprop="image" content="https://cosignals.io/img/cosignals-preview.png">
+    
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Cosignals DNS Analysis Tool",
+      "url": "https://cosignals.io",
+      "description": "Analyze DNS records and detect providers for any domain",
+      "applicationCategory": "WebTool",
+      "operatingSystem": "Any",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }{{ if .Hostname }},
+      "mainEntity": {
+        "@type": "Thing",
+        "name": "{{ .Hostname }} DNS Analysis",
+        "description": "DNS records and provider analysis for {{ .Hostname }}"
+      }{{ end }}
+    }
+    </script>
     <style>
+        /* Base Styles */
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2c3e50;
+            --accent-color: #e0f7fa;
+            --light-gray: #f8f9fa;
+            --medium-gray: #ddd;
+            --dark-gray: #333;
+            --error-color: #e74c3c;
+            --success-color: #2ecc71;
+            --border-radius: 4px;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            max-width: 800px;
+            line-height: la.6;
+            color: var(--dark-gray);
+            max-width: 900px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 30px 20px;
+            background-color: #fff;
         }
+        
+        /* Typography */
+        h1, h2, h3, h4 {
+            color: var(--secondary-color);
+            margin-bottom: 1rem;
+            line-height: 1.3;
+        }
+        
         h1 {
-            color: #2c3e50;
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
         }
+        
+        h2 {
+            font-size: 1.8rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--medium-gray);
+            margin-top: 2rem;
+        }
+        
+        h3 {
+            font-size: 1.4rem;
+            margin-top: 1.5rem;
+        }
+        
+        p {
+            margin-bottom: 1rem;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 2rem;
+        }
+        
+        /* Layout Sections */
+        header {
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        
+        section {
+            margin-bottom: 3rem;
+            padding: 1.5rem;
+            background-color: #fff;
+            border-radius: var(--border-radius);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        main {
+            margin-top: 2rem;
+        }
+        
+        /* Form Elements */
         .input-group {
-            margin-bottom: 20px;
+            margin-bottom: 1.5rem;
         }
+        
         label {
             display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
+            margin-bottom: 8px;
+            font-weight: 600;
+            font-size: 1rem;
         }
+        
         input[type="text"] {
-            padding: 8px;
+            padding: 10px 12px;
             width: 100%;
-            font-size: 16px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
+            font-size: 1rem;
+            border: 2px solid var(--medium-gray);
+            border-radius: var(--border-radius);
+            transition: border-color 0.3s;
         }
-        select {
-            padding: 8px;
-            font-size: 16px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
+        
+        input[type="text"]:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
         }
+        
         button {
-            background-color: #3498db;
+            background-color: var(--primary-color);
             color: white;
             border: none;
-            padding: 10px 15px;
-            font-size: 16px;
+            padding: 12px 20px;
+            font-size: 1rem;
+            font-weight: 600;
             cursor: pointer;
-            border-radius: 4px;
+            border-radius: var(--border-radius);
+            transition: background-color 0.3s;
         }
+        
         button:hover {
             background-color: #2980b9;
         }
-        pre {
-            background-color: #f8f9fa;
-            padding: 15px;
-            border-radius: 4px;
-            overflow-x: auto;
-        }
+        
+        /* Results Section */
         .results {
-            margin-top: 30px;
+            margin-top: 1rem;
         }
+        
         .provider-list {
-            margin-top: 20px;
+            margin: 1.5rem 0;
         }
-        .provider-list span {
+        
+        .provider-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 0.5rem;
+        }
+        
+        .provider-tag {
             display: inline-block;
-            background-color: #e0f7fa;
-            padding: 5px 10px;
-            margin: 5px;
-            border-radius: 15px;
+            background-color: var(--accent-color);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: 500;
+            font-size: 0.9rem;
         }
+        
+        /* Table Styles */
+        .dns-records {
+            margin-top: 2rem;
+        }
+        
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
+            margin-top: 1rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 12px;
+        
+        caption {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 0.5rem;
             text-align: left;
         }
-        th {
-            background-color: #f2f2f2;
-            font-weight: bold;
+        
+        th, td {
+            border: 1px solid var(--medium-gray);
+            padding: 12px 15px;
+            text-align: left;
         }
+        
+        th {
+            background-color: var(--light-gray);
+            font-weight: 600;
+        }
+        
         tr:nth-child(even) {
             background-color: #f9f9f9;
         }
-        .loading {
-            display: none;
-            margin-top: 20px;
-            text-align: center;
-        }
+        
+        /* Utility Classes */
         .error {
-            color: #e74c3c;
-            margin-top: 20px;
+            color: var(--error-color);
+            padding: 8px 0;
+            font-weight: 500;
+        }
+        
+        .query-info {
+            margin-top: 1.5rem;
+            font-size: 0.9rem;
+            color: #666;
+            text-align: right;
+        }
+        
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            body {
+                padding: 15px;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            h2 {
+                font-size: 1.5rem;
+            }
+            
+            section {
+                padding: 1rem;
+            }
+            
+            th, td {
+                padding: 8px 10px;
+                font-size: 0.9rem;
+            }
         }
     </style>
 </head>
 <body>
-    <h1>Cosignals</h1>
+    <header>
+        <h1>{{ if .Hostname }}DNS Analysis for {{ .Hostname }}{{ else }}Cosignals DNS Analysis Tool{{ end }}</h1>
+        <p class="subtitle">{{ if .Hostname }}View detailed DNS records and provider information{{ else }}Analyze DNS records and detect providers for any domain{{ end }}</p>
+    </header>
     
-    <div class="input-group">
-        <label for="hostname">Domain Name:</label>
-        <input type="text" id="hostname" placeholder="example.com" {{ if .Hostname }}value="{{ .Hostname }}"{{ end }} />
-    </div>
+    <section class="search-section">
+        <h2>Analyze a Domain</h2>
+        <form method="GET">
+            <div class="input-group">
+                <label for="hostname">Domain Name:</label>
+                <input type="text" id="hostname" name="hostname" placeholder="example.com" {{ if .Hostname }}value="{{ .Hostname }}"{{ end }} />
+            </div>
+            
+            <!-- DNS provider selection removed - only using Google DNS -->
+            
+            <button type="submit">Analyze Domain</button>
+        </form>
+        
+        <div id="error" class="error"></div>
+    </section>
     
-    <!-- DNS provider selection removed - only using Google DNS -->
-    
-    <button id="analyze">Analyze Domain</button>
-    
-    <div id="loading" class="loading">Analyzing DNS records... Please wait.</div>
-    
-    <div id="error" class="error"></div>
-    
-    <div id="results" class="results" {{ if not .Hostname }}style="display: none;"{{ end }}>
-        <h2>Results for <span id="result-hostname">{{ if .Hostname }}{{ .Hostname }}{{ end }}</span></h2>
+    {{ if .Hostname }}
+    <main>
+        <section class="results" id="results">
+            <h2>DNS Analysis Results for {{ .Hostname }}</h2>
         
         <div class="provider-list">
             <h3>Detected Providers:</h3>
-            <div id="providers">
+            <div id="providers" class="provider-tags">
                 {{ if .Data }}
                     {{ if .Data.Providers }}
                         {{ range .Data.Providers }}
-                            <span>{{ . }}</span>
+                            <span class="provider-tag">{{ . }}</span>
                         {{ end }}
                     {{ else }}
-                        No providers detected
+                        <p>No providers detected</p>
                     {{ end }}
                 {{ end }}
             </div>
         </div>
         
-        <h3>DNS Records:</h3>
-        <table>
-            <thead>
-                <tr>
-                    <th>Type</th>
-                    <th>Data</th>
-                    <th>Provider</th>
-                </tr>
-            </thead>
-            <tbody id="records">
-                {{ if .Data }}
-                    {{ if .Data.Records }}
-                        {{ range .Data.Records }}
-                            <tr>
-                                <td>{{ .Type }}</td>
-                                <td>{{ .Data }}</td>
-                                <td>{{ if .Provider }}{{ .Provider }}{{ else }}Unknown{{ end }}</td>
-                            </tr>
+        <div class="dns-records">
+            <h3>DNS Records for {{ .Hostname }}</h3>
+            <table class="records-table">
+                <caption>Complete DNS Record Information</caption>
+                <thead>
+                    <tr>
+                        <th scope="col">Record Type</th>
+                        <th scope="col">Record Data</th>
+                        <th scope="col">Provider</th>
+                    </tr>
+                </thead>
+                <tbody id="records">
+                    {{ if .Data }}
+                        {{ if .Data.Records }}
+                            {{ range .Data.Records }}
+                                <tr>
+                                    <td>{{ .Type }}</td>
+                                    <td>{{ .Data }}</td>
+                                    <td>{{ if .Provider }}{{ .Provider }}{{ else }}Unknown{{ end }}</td>
+                                </tr>
+                            {{ end }}
+                        {{ else }}
+                            <tr><td colspan="3">No DNS records found for this domain</td></tr>
                         {{ end }}
-                    {{ else }}
-                        <tr><td colspan="3">No records found</td></tr>
                     {{ end }}
-                {{ end }}
-            </tbody>
-        </table>
+                </tbody>
+            </table>
 
-        <p>Query time: <span id="query-time">{{ if .Data }}{{ .Data.QueryTime }}{{ end }}</span></p>
-    </div>
+            <div class="query-info">
+                <p>Query completed in: <span id="query-time">{{ if .Data }}{{ .Data.QueryTime }}{{ end }}</span></p>
+            </div>
+        </div>
+    </section>
+    </main>
+    {{ else }}
+    <section class="info-section">
+        <h2>What is Cosignals?</h2>
+        <p>Cosignals is a DNS analysis tool that helps you discover which providers and services are used by any domain. Our tool analyzes DNS records including A, AAAA, MX, NS, and TXT records to identify hosting providers, email services, and other technology providers.</p>
+        
+        <h3>How It Works</h3>
+        <p>Simply enter a domain name above and our tool will:</p>
+        <ul>
+            <li>Retrieve all DNS records for the domain</li>
+            <li>Analyze IP addresses to identify hosting providers</li>
+            <li>Examine MX records to determine email providers</li>
+            <li>Analyze NS records to identify DNS providers</li>
+            <li>Check TXT records for verification and service information</li>
+        </ul>
+        
+        <h3>Use Cases</h3>
+        <p>Cosignals is useful for:</p>
+        <ul>
+            <li>Developers researching technology stacks</li>
+            <li>Marketing professionals analyzing competitor infrastructure</li>
+            <li>Security researchers verifying domain configurations</li>
+            <li>IT administrators troubleshooting DNS issues</li>
+        </ul>
+    </section>
+    {{ end }}
+    
+    <footer>
+        <p>&copy; 2025 Cosignals - DNS Analysis Tool</p>
+    </footer>
     
     <script>
-        // Function to analyze a domain
-        async function analyzeDomain(hostname, provider) {
-            // Reset previous results
-            document.getElementById('results').style.display = 'none';
-            document.getElementById('error').textContent = '';
-            
-            if (!hostname) {
-                document.getElementById('error').textContent = 'Please enter a domain name';
-                return;
-            }
-            
-            // Update the input field with the hostname
-            document.getElementById('hostname').value = hostname;
-            
-            // Show loading indicator
-            document.getElementById('loading').style.display = 'block';
-            
-            try {
-                const response = await fetch(`/api?hostname=${encodeURIComponent(hostname)}&provider=${provider}`);
-                
-                if (!response.ok) {
-                    throw new Error(`Error: ${response.status} ${response.statusText}`);
-                }
-                
-                const data = await response.json();
-                
-                // Hide loading indicator
-                document.getElementById('loading').style.display = 'none';
-                
-                // Display results
-                document.getElementById('result-hostname').textContent = data.hostname;
-                document.getElementById('query-time').textContent = data.query_time;
-                
-                // Display providers
-                const providersContainer = document.getElementById('providers');
-                providersContainer.innerHTML = '';
-                if (data.providers && data.providers.length > 0) {
-                    data.providers.forEach(provider => {
-                        const span = document.createElement('span');
-                        span.textContent = provider;
-                        providersContainer.appendChild(span);
-                    });
-                } else {
-                    providersContainer.textContent = 'No providers detected';
-                }
-                
-                // Display records
-                const recordsContainer = document.getElementById('records');
-                recordsContainer.innerHTML = '';
-                if (data.records && data.records.length > 0) {
-                    data.records.forEach(record => {
-                        const row = document.createElement('tr');
-                        
-                        const typeCell = document.createElement('td');
-                        typeCell.textContent = record.type;
-                        row.appendChild(typeCell);
-                        
-                        const dataCell = document.createElement('td');
-                        dataCell.textContent = record.data;
-                        row.appendChild(dataCell);
-                        
-                        const providerCell = document.createElement('td');
-                        providerCell.textContent = record.provider || 'Unknown';
-                        row.appendChild(providerCell);
-                        
-                        recordsContainer.appendChild(row);
-                    });
-                } else {
-                    const row = document.createElement('tr');
-                    const cell = document.createElement('td');
-                    cell.colSpan = 3;
-                    cell.textContent = 'No records found';
-                    row.appendChild(cell);
-                    recordsContainer.appendChild(row);
-                }
-                
-                // Show results
-                document.getElementById('results').style.display = 'block';
-                
-                // Update URL to reflect the hostname
-                updateURL(hostname);
-                
-            } catch (error) {
-                document.getElementById('loading').style.display = 'none';
-                document.getElementById('error').textContent = error.message || 'Error analyzing domain';
-                console.error(error);
-            }
-        }
-        
-        // Function to update the URL without reloading the page
-        function updateURL(hostname) {
-            const url = new URL(window.location);
-            
-            // Change the pathname to /hosts/{hostname}
-            url.pathname = `/hosts/${hostname}`;
-            
-            // Update the URL without triggering a page reload
-            window.history.pushState({}, '', url);
-        }
-        
-        // Check if we have a hostname in the URL path
-        function getHostnameFromURL() {
-            const path = window.location.pathname;
-            const match = path.match(/^\/hosts\/([^\/]+)$/);
-            
-            if (match && match[1]) {
-                return decodeURIComponent(match[1]);
-            }
-            
-            return null;
-        }
-        
-        // When the analyze button is clicked
-        document.getElementById('analyze').addEventListener('click', function() {
+        // Display error message if there's an empty hostname submission
+        document.querySelector('form').addEventListener('submit', function(e) {
             const hostname = document.getElementById('hostname').value.trim();
-            const provider = "google"; // Always use Google DNS
-            
-            if (hostname) {
-                analyzeDomain(hostname, provider);
-            }
-        });
-        
-        // Allow pressing Enter in the hostname field
-        document.getElementById('hostname').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                document.getElementById('analyze').click();
-            }
-        });
-        
-        // On page load, check for hostname in URL
-        window.addEventListener('load', function() {
-            const hostname = getHostnameFromURL();
-            if (hostname) {
-                const provider = "google"; // Always use Google DNS
-                analyzeDomain(hostname, provider);
-            }
-        });
-        
-        // Handle browser back/forward navigation
-        window.addEventListener('popstate', function() {
-            const hostname = getHostnameFromURL();
-            if (hostname) {
-                const provider = "google"; // Always use Google DNS
-                analyzeDomain(hostname, provider);
-            } else {
-                // Clear the results if we're back at the homepage
-                document.getElementById('results').style.display = 'none';
-                document.getElementById('hostname').value = '';
+            if (!hostname) {
+                e.preventDefault();
+                document.getElementById('error').textContent = 'Please enter a domain name';
             }
         });
     </script>

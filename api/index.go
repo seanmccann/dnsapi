@@ -229,12 +229,10 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Check if this is a request for a specific hostname page
-	var hostnameFromPath string
 	if strings.HasPrefix(r.URL.Path, "/hosts/") {
 		parts := strings.Split(r.URL.Path, "/")
 		if len(parts) >= 3 {
-			hostnameFromPath = parts[2]
-			hostname = hostnameFromPath
+			hostname = parts[2]
 		}
 	}
 
@@ -249,6 +247,13 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 	if hostname != "" {
 		// Get the DNS data for server-side rendering
 		data = fetchDNSData(hostname, startTime)
+		
+		// If this was just a regular GET request with hostname parameter,
+		// redirect to the canonical /hosts/hostname URL for better SEO
+		if !strings.HasPrefix(r.URL.Path, "/hosts/") && r.URL.Path != "/api" {
+			http.Redirect(w, r, "/hosts/"+hostname, http.StatusMovedPermanently)
+			return
+		}
 	}
 
 	// Set content type header
