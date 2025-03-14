@@ -6,6 +6,7 @@ import (
 	"encoding/csv"
 	"encoding/json"
 	"fmt"
+	"html/template"
 	"io"
 	"net"
 	"net/http"
@@ -17,6 +18,9 @@ import (
 
 //go:embed data/ip_owners.csv data/dns_providers.txt
 var embeddedData embed.FS
+
+//go:embed templates/index.html
+var templateFS embed.FS
 
 const (
 	cloudflareDoH = "https://cloudflare-dns.com/dns-query"
@@ -182,6 +186,12 @@ type RecordOutput struct {
 	Provider string `json:"provider,omitempty"`
 }
 
+// PageData represents the data passed to the HTML template
+type PageData struct {
+	Hostname string
+	Data     *JSONOutput
+}
+
 // Handler function for Vercel serverless function
 func Handler(w http.ResponseWriter, r *http.Request) {
 	startTime := time.Now()
@@ -205,13 +215,73 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 
 	// Parse query parameters
 	hostname := r.URL.Query().Get("hostname")
-	if hostname == "" {
-		http.Error(w, "Missing hostname parameter", http.StatusBadRequest)
+
+	// Check the path to see if this is an API request or a page request
+	if r.URL.Path == "/api" {
+		// This is an API request - return JSON data
+		if hostname == "" {
+			http.Error(w, "Missing hostname parameter", http.StatusBadRequest)
+			return
+		}
+
+		handleAPIRequest(w, hostname, startTime)
 		return
 	}
 
-	// Ignoring any provider parameter - always use Google DNS
+	// Check if this is a request for a specific hostname page
+	var hostnameFromPath string
+	if strings.HasPrefix(r.URL.Path, "/hosts/") {
+		parts := strings.Split(r.URL.Path, "/")
+		if len(parts) >= 3 {
+			hostnameFromPath = parts[2]
+			hostname = hostnameFromPath
+		}
+	}
 
+	// Load the HTML template
+	tmpl, err := template.ParseFS(templateFS, "templates/index.html")
+	if err != nil {
+		http.Error(w, fmt.Sprintf("Error loading template: %v", err), http.StatusInternalServerError)
+		return
+	}
+
+	var data *JSONOutput
+	if hostname != "" {
+		// Get the DNS data for server-side rendering
+		data = fetchDNSData(hostname, startTime)
+	}
+
+	// Set content type header
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+
+	// Render the template with the data
+	pageData := PageData{
+		Hostname: hostname,
+		Data:     data,
+	}
+
+	if err := tmpl.Execute(w, pageData); err != nil {
+		http.Error(w, fmt.Sprintf("Error rendering template: %v", err), http.StatusInternalServerError)
+	}
+}
+
+// Handles API requests and returns JSON
+func handleAPIRequest(w http.ResponseWriter, hostname string, startTime time.Time) {
+	output := fetchDNSData(hostname, startTime)
+
+	// Set content type header
+	w.Header().Set("Content-Type", "application/json")
+
+	// Output the JSON
+	encoder := json.NewEncoder(w)
+	encoder.SetIndent("", "  ")
+	if err := encoder.Encode(output); err != nil {
+		http.Error(w, fmt.Sprintf("Error encoding JSON: %v", err), http.StatusInternalServerError)
+	}
+}
+
+// Fetches DNS data for a hostname
+func fetchDNSData(hostname string, startTime time.Time) *JSONOutput {
 	// Load IP ownership information from embedded data
 	ipBlocks, err := loadEmbeddedIPOwners()
 	if err != nil {
@@ -261,7 +331,7 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 	}()
 
 	// Create the JSON output structure
-	output := JSONOutput{
+	output := &JSONOutput{
 		Hostname:  hostname,
 		Records:   []RecordOutput{},
 		Providers: []string{},
@@ -314,15 +384,7 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 	}
 	output.QueryTime = elapsed.String()
 
-	// Set content type header
-	w.Header().Set("Content-Type", "application/json")
-
-	// Output the JSON
-	encoder := json.NewEncoder(w)
-	encoder.SetIndent("", "  ")
-	if err := encoder.Encode(output); err != nil {
-		http.Error(w, fmt.Sprintf("Error encoding JSON: %v", err), http.StatusInternalServerError)
-	}
+	return output
 }
 
 func queryDoH(dohURL, hostname string, recordType int) (*DNSResponse, error) {
