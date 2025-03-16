@@ -71,15 +71,20 @@
     <style>
         /* Base Styles */
         :root {
-            --primary-color: #3498db;
-            --secondary-color: #2c3e50;
-            --accent-color: #e0f7fa;
+            --primary-color: #4a6cf7;
+            --secondary-color: #1d3557;
+            --accent-color: #e6f0ff;
             --light-gray: #f8f9fa;
-            --medium-gray: #ddd;
-            --dark-gray: #333;
-            --error-color: #e74c3c;
-            --success-color: #2ecc71;
-            --border-radius: 4px;
+            --medium-gray: #e9ecef;
+            --dark-gray: #343a40;
+            --text-color: #212529;
+            --border-color: #dee2e6;
+            --shadow-color: rgba(0, 0, 0, 0.05);
+            --error-color: #dc3545;
+            --success-color: #28a745;
+            --border-radius: 8px;
+            --box-shadow: 0 4px 6px var(--shadow-color);
+            --transition: all 0.3s ease;
         }
         
         * {
@@ -90,329 +95,642 @@
         
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            line-height: la.6;
-            color: var(--dark-gray);
-            max-width: 900px;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: #fcfcfd;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .container {
+            max-width: 1200px;
             margin: 0 auto;
-            padding: 30px 20px;
-            background-color: #fff;
+            padding: 0 20px;
         }
         
-        /* Typography */
-        h1, h2, h3, h4 {
-            color: var(--secondary-color);
-            margin-bottom: 1rem;
-            line-height: 1.3;
-        }
-        
-        h1 {
-            font-size: 2.2rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-        }
-        
-        h2 {
-            font-size: 1.8rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 1px solid var(--medium-gray);
-            margin-top: 2rem;
-        }
-        
-        h3 {
-            font-size: 1.4rem;
-            margin-top: 1.5rem;
-        }
-        
-        p {
-            margin-bottom: 1rem;
-        }
-        
-        .subtitle {
-            font-size: 1.2rem;
-            color: #666;
-            margin-bottom: 2rem;
-        }
-        
-        /* Layout Sections */
+        /* Header Styles */
         header {
-            margin-bottom: 2rem;
-            text-align: center;
+            background-color: white;
+            box-shadow: 0 2px 10px var(--shadow-color);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
         
-        section {
-            margin-bottom: 3rem;
-            padding: 1.5rem;
-            background-color: #fff;
+        .header-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo-text {
+            margin-left: 10px;
+        }
+        
+        .search-container {
+            flex: 1;
+            max-width: 600px;
+            margin: 0 20px;
+        }
+        
+        .search-form {
+            display: flex;
+            position: relative;
+        }
+        
+        .search-input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 2px solid var(--border-color);
             border-radius: var(--border-radius);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-        
-        main {
-            margin-top: 2rem;
-        }
-        
-        /* Form Elements */
-        .input-group {
-            margin-bottom: 1.5rem;
-        }
-        
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
             font-size: 1rem;
-        }
-        
-        input[type="text"] {
-            padding: 10px 12px;
+            transition: var(--transition);
             width: 100%;
-            font-size: 1rem;
-            border: 2px solid var(--medium-gray);
-            border-radius: var(--border-radius);
-            transition: border-color 0.3s;
+            background-color: #f9fafc;
         }
         
-        input[type="text"]:focus {
-            border-color: var(--primary-color);
+        .search-input:focus {
             outline: none;
-            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(74, 108, 247, 0.2);
+            background-color: white;
         }
         
-        button {
+        .search-button {
+            position: absolute;
+            right: 4px;
+            top: 4px;
             background-color: var(--primary-color);
             color: white;
             border: none;
-            padding: 12px 20px;
-            font-size: 1rem;
+            padding: 8px 16px;
+            border-radius: 6px;
             font-weight: 600;
             cursor: pointer;
-            border-radius: var(--border-radius);
-            transition: background-color 0.3s;
+            transition: var(--transition);
         }
         
-        button:hover {
-            background-color: #2980b9;
+        .search-button:hover {
+            background-color: #3859e0;
+        }
+        
+        /* Main Content Styles */
+        main {
+            padding: 40px 0;
+        }
+        
+        .welcome-section {
+            text-align: center;
+            margin: 60px 0;
+        }
+        
+        .welcome-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--secondary-color);
+            margin-bottom: 16px;
+        }
+        
+        .welcome-subtitle {
+            font-size: 1.2rem;
+            color: #5a6d84;
+            max-width: 700px;
+            margin: 0 auto 30px;
         }
         
         /* Results Section */
-        .results {
-            margin-top: 1rem;
+        .results-section {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            overflow: hidden;
+            margin-bottom: 40px;
         }
         
-        .provider-list {
-            margin: 1.5rem 0;
+        .results-header {
+            background-color: #f9fafc;
+            padding: 20px 30px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .results-title {
+            font-size: 1.5rem;
+            color: var(--secondary-color);
+            font-weight: 700;
+            margin: 0;
+        }
+        
+        .results-domain {
+            color: var(--primary-color);
+        }
+        
+        .results-body {
+            padding: 30px;
+        }
+        
+        /* Provider Tags */
+        .provider-section {
+            margin-bottom: 30px;
+        }
+        
+        .provider-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--secondary-color);
         }
         
         .provider-tags {
             display: flex;
             flex-wrap: wrap;
-            gap: 8px;
-            margin-top: 0.5rem;
+            gap: 10px;
         }
         
         .provider-tag {
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
             background-color: var(--accent-color);
-            padding: 6px 12px;
+            color: var(--primary-color);
+            padding: 6px 14px;
             border-radius: 20px;
+            font-size: 0.9rem;
             font-weight: 500;
-            font-size: 0.9rem;
         }
         
-        /* Table Styles */
-        .dns-records {
-            margin-top: 2rem;
+        /* Record Groups */
+        .records-section {
+            margin-top: 40px;
         }
         
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 1rem;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-            table-layout: fixed;
+        .record-group {
+            margin-bottom: 30px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            overflow: hidden;
         }
         
-        caption {
-            font-size: 0.9rem;
-            color: #666;
-            margin-bottom: 0.5rem;
-            text-align: left;
+        .record-group-header {
+            background-color: #f9fafc;
+            padding: 12px 20px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
         
-        th, td {
-            border: 1px solid var(--medium-gray);
-            padding: 12px 15px;
-            text-align: left;
-            word-wrap: break-word;
-            overflow-wrap: break-word;
+        .record-type {
+            font-weight: 600;
+            color: var(--secondary-color);
+            font-size: 1.1rem;
         }
         
-        td:nth-child(2) {
-            max-width: 400px;
-            overflow-x: auto;
-        }
-        
-        th {
-            background-color: var(--light-gray);
+        .record-count {
+            background-color: var(--accent-color);
+            color: var(--primary-color);
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.8rem;
             font-weight: 600;
         }
         
-        tr:nth-child(even) {
-            background-color: #f9f9f9;
+        .record-table {
+            width: 100%;
+            border-collapse: collapse;
         }
         
-        /* Utility Classes */
-        .error {
-            color: var(--error-color);
-            padding: 8px 0;
-            font-weight: 500;
+        .record-table th,
+        .record-table td {
+            padding: 12px 20px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
         }
         
-        .query-info {
-            margin-top: 1.5rem;
+        .record-table th {
+            font-weight: 600;
+            color: var(--secondary-color);
+            background-color: #f9fafc;
             font-size: 0.9rem;
-            color: #666;
+        }
+        
+        .record-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .record-table td {
+            font-family: SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            font-size: 0.9rem;
+        }
+        
+        .record-data {
+            word-break: break-all;
+        }
+        
+        .record-provider {
+            color: #5a6d84;
+        }
+        
+        /* TXT Records specific styling */
+        .txt-record-data {
+            font-family: SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            word-break: break-all;
+            background-color: #f9fafc;
+            padding: 12px;
+            border-radius: 6px;
+            line-height: 1.5;
+            font-size: 0.85rem;
+            overflow-x: auto;
+        }
+        
+        .txt-record-entry {
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px dashed var(--border-color);
+        }
+        
+        .txt-record-entry:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+        
+        /* Info Section */
+        .info-section {
+            background-color: white;
+            padding: 30px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            margin-bottom: 40px;
+        }
+        
+        .info-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: var(--secondary-color);
+        }
+        
+        .info-section h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin: 25px 0 15px;
+            color: var(--secondary-color);
+        }
+        
+        .info-section p {
+            margin-bottom: 15px;
+            color: #5a6d84;
+        }
+        
+        .info-section ul {
+            margin-left: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .info-section li {
+            margin-bottom: 8px;
+            color: #5a6d84;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: #f9fafc;
+            border-top: 1px solid var(--border-color);
+            padding: 30px 0;
+            text-align: center;
+            color: #5a6d84;
+            font-size: 0.9rem;
+        }
+        
+        /* Query Info */
+        .query-info {
             text-align: right;
+            font-size: 0.85rem;
+            color: #5a6d84;
+            margin-top: 20px;
+        }
+        
+        /* Error Message */
+        .error-message {
+            color: var(--error-color);
+            background-color: rgba(220, 53, 69, 0.1);
+            padding: 10px 15px;
+            border-radius: 4px;
+            margin: 15px 0;
+            font-size: 0.9rem;
         }
         
         /* Responsive Adjustments */
         @media (max-width: 768px) {
-            body {
-                padding: 15px;
+            .header-container {
+                flex-direction: column;
+                gap: 15px;
             }
             
-            h1 {
-                font-size: 1.8rem;
+            .search-container {
+                width: 100%;
+                max-width: none;
+                margin: 15px 0;
             }
             
-            h2 {
-                font-size: 1.5rem;
+            .welcome-title {
+                font-size: 2rem;
             }
             
-            section {
-                padding: 1rem;
+            .results-header {
+                padding: 15px 20px;
             }
             
-            th, td {
+            .results-body {
+                padding: 20px;
+            }
+            
+            .record-table th,
+            .record-table td {
+                padding: 10px 15px;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .welcome-title {
+                font-size: 1.7rem;
+            }
+            
+            .welcome-subtitle {
+                font-size: 1rem;
+            }
+            
+            .record-table th,
+            .record-table td {
                 padding: 8px 10px;
-                font-size: 0.9rem;
+                font-size: 0.8rem;
             }
         }
     </style>
 </head>
 <body>
     <header>
-        <h1>{{ if .Hostname }}Website Analysis for {{ .Hostname }}{{ else }}Cosignals Website Analysis Tool{{ end }}</h1>
-        <p class="subtitle">{{ if .Hostname }}View detailed DNS records and provider information{{ else }}Analyze DNS records and detect providers for any domain{{ end }}</p>
-    </header>
-    
-    <section class="search-section">
-        <h2>Analyze a Domain</h2>
-        <form method="GET" action="/">
-            <div class="input-group">
-                <label for="hostname">Domain Name:</label>
-                <input type="text" id="hostname" name="hostname" placeholder="example.com" {{ if .Hostname }}value="{{ .Hostname }}"{{ end }} />
-            </div>
-            
-            <!-- DNS provider selection removed - only using Google DNS -->
-            
-            <button type="submit">Analyze Domain</button>
-        </form>
-        
-        <div id="error" class="error"></div>
-    </section>
-    
-    {{ if .Hostname }}
-    <main>
-        <section class="results" id="results">
-            <h2>Website Analysis Results for {{ .Hostname }}</h2>
-        
-        <div class="provider-list">
-            <h3>Detected Providers:</h3>
-            <div id="providers" class="provider-tags">
-                {{ if .Data }}
-                    {{ if .Data.Providers }}
-                        {{ range .Data.Providers }}
-                            <span class="provider-tag">{{ . }}</span>
-                        {{ end }}
-                    {{ else }}
-                        <p>No providers detected</p>
-                    {{ end }}
-                {{ end }}
+        <div class="container">
+            <div class="header-container">
+                <a href="/" class="logo">
+                    <span class="logo-text">Cosignals</span>
+                </a>
+                <div class="search-container">
+                    <form method="GET" action="/" class="search-form">
+                        <input type="text" id="hostname" name="hostname" placeholder="Enter a domain name (e.g. example.com)" class="search-input" {{ if .Hostname }}value="{{ .Hostname }}"{{ end }} />
+                        <button type="submit" class="search-button">Analyze</button>
+                    </form>
+                </div>
+                <div class="right-section">
+                    <!-- Empty space for future elements -->
+                </div>
             </div>
         </div>
-        
-        <div class="dns-records">
-            <h3>DNS Records for {{ .Hostname }}</h3>
-            <table class="records-table">
-                <caption>Complete DNS Record Information</caption>
-                <thead>
-                    <tr>
-                        <th scope="col">Record Type</th>
-                        <th scope="col">Record Data</th>
-                        <th scope="col">Provider</th>
-                    </tr>
-                </thead>
-                <tbody id="records">
-                    {{ if .Data }}
-                        {{ if .Data.Records }}
-                            {{ range .Data.Records }}
-                                <tr>
-                                    <td>{{ .Type }}</td>
-                                    <td>{{ .Data }}</td>
-                                    <td>{{ if .Provider }}{{ .Provider }}{{ else }}Unknown{{ end }}</td>
-                                </tr>
+    </header>
+
+    <main class="container">
+        {{ if .Hostname }}
+        <section class="results-section">
+            <div class="results-header">
+                <h1 class="results-title">DNS Records for <span class="results-domain">{{ .Hostname }}</span></h1>
+            </div>
+            <div class="results-body">
+                {{ if .Data }}
+                <div class="provider-section">
+                    <h2 class="provider-title">Detected Providers</h2>
+                    <div class="provider-tags">
+                        {{ if .Data.Providers }}
+                            {{ range .Data.Providers }}
+                                <span class="provider-tag">{{ . }}</span>
                             {{ end }}
                         {{ else }}
-                            <tr><td colspan="3">No DNS records found for this domain</td></tr>
+                            <span>No providers detected</span>
+                        {{ end }}
+                    </div>
+                </div>
+
+                <div class="records-section">
+                    {{ $records := .Data.Records }}
+                    
+                    {{ /* Group records by type */ }}
+                    {{ $aRecords := slice }}
+                    {{ $aaaaRecords := slice }}
+                    {{ $mxRecords := slice }}
+                    {{ $nsRecords := slice }}
+                    {{ $txtRecords := slice }}
+                    
+                    {{ range $records }}
+                        {{ if eq .Type "A" }}
+                            {{ $aRecords = append $aRecords . }}
+                        {{ else if eq .Type "AAAA" }}
+                            {{ $aaaaRecords = append $aaaaRecords . }}
+                        {{ else if eq .Type "MX" }}
+                            {{ $mxRecords = append $mxRecords . }}
+                        {{ else if eq .Type "NS" }}
+                            {{ $nsRecords = append $nsRecords . }}
+                        {{ else if eq .Type "TXT" }}
+                            {{ $txtRecords = append $txtRecords . }}
                         {{ end }}
                     {{ end }}
-                </tbody>
-            </table>
+                    
+                    {{ /* Display A Records */ }}
+                    {{ if $aRecords }}
+                    <div class="record-group">
+                        <div class="record-group-header">
+                            <div class="record-type">A Records</div>
+                            <div class="record-count">{{ len $aRecords }}</div>
+                        </div>
+                        <table class="record-table">
+                            <thead>
+                                <tr>
+                                    <th>Record Data</th>
+                                    <th>Provider</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{ range $aRecords }}
+                                <tr>
+                                    <td class="record-data">{{ .Data }}</td>
+                                    <td class="record-provider">{{ if .Provider }}{{ .Provider }}{{ else }}Unknown{{ end }}</td>
+                                </tr>
+                                {{ end }}
+                            </tbody>
+                        </table>
+                    </div>
+                    {{ end }}
+                    
+                    {{ /* Display AAAA Records */ }}
+                    {{ if $aaaaRecords }}
+                    <div class="record-group">
+                        <div class="record-group-header">
+                            <div class="record-type">AAAA Records</div>
+                            <div class="record-count">{{ len $aaaaRecords }}</div>
+                        </div>
+                        <table class="record-table">
+                            <thead>
+                                <tr>
+                                    <th>Record Data</th>
+                                    <th>Provider</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{ range $aaaaRecords }}
+                                <tr>
+                                    <td class="record-data">{{ .Data }}</td>
+                                    <td class="record-provider">{{ if .Provider }}{{ .Provider }}{{ else }}Unknown{{ end }}</td>
+                                </tr>
+                                {{ end }}
+                            </tbody>
+                        </table>
+                    </div>
+                    {{ end }}
+                    
+                    {{ /* Display MX Records */ }}
+                    {{ if $mxRecords }}
+                    <div class="record-group">
+                        <div class="record-group-header">
+                            <div class="record-type">MX Records</div>
+                            <div class="record-count">{{ len $mxRecords }}</div>
+                        </div>
+                        <table class="record-table">
+                            <thead>
+                                <tr>
+                                    <th>Record Data</th>
+                                    <th>Provider</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{ range $mxRecords }}
+                                <tr>
+                                    <td class="record-data">{{ .Data }}</td>
+                                    <td class="record-provider">{{ if .Provider }}{{ .Provider }}{{ else }}Unknown{{ end }}</td>
+                                </tr>
+                                {{ end }}
+                            </tbody>
+                        </table>
+                    </div>
+                    {{ end }}
+                    
+                    {{ /* Display NS Records */ }}
+                    {{ if $nsRecords }}
+                    <div class="record-group">
+                        <div class="record-group-header">
+                            <div class="record-type">NS Records</div>
+                            <div class="record-count">{{ len $nsRecords }}</div>
+                        </div>
+                        <table class="record-table">
+                            <thead>
+                                <tr>
+                                    <th>Record Data</th>
+                                    <th>Provider</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{ range $nsRecords }}
+                                <tr>
+                                    <td class="record-data">{{ .Data }}</td>
+                                    <td class="record-provider">{{ if .Provider }}{{ .Provider }}{{ else }}Unknown{{ end }}</td>
+                                </tr>
+                                {{ end }}
+                            </tbody>
+                        </table>
+                    </div>
+                    {{ end }}
+                    
+                    {{ /* Display TXT Records */ }}
+                    {{ if $txtRecords }}
+                    <div class="record-group">
+                        <div class="record-group-header">
+                            <div class="record-type">TXT Records</div>
+                            <div class="record-count">{{ len $txtRecords }}</div>
+                        </div>
+                        <div class="txt-records-container">
+                            {{ range $txtRecords }}
+                            <div class="txt-record-entry">
+                                <div class="txt-record-data">{{ .Data }}</div>
+                                {{ if .Provider }}
+                                <div class="record-provider" style="margin-top: 5px; padding-left: 12px;">Provider: {{ .Provider }}</div>
+                                {{ end }}
+                            </div>
+                            {{ end }}
+                        </div>
+                    </div>
+                    {{ end }}
+                </div>
 
-            <div class="query-info">
-                <p>Query completed in: <span id="query-time">{{ if .Data }}{{ .Data.QueryTime }}{{ end }}</span></p>
+                <div class="query-info">
+                    <p>Query completed in: <span id="query-time">{{ .Data.QueryTime }}</span></p>
+                </div>
+                {{ else }}
+                <div class="error-message">
+                    No data found for this domain. Please try again.
+                </div>
+                {{ end }}
             </div>
-        </div>
-    </section>
+        </section>
+        {{ else }}
+        <section class="welcome-section">
+            <h1 class="welcome-title">DNS Lookup & Website Analysis Tool</h1>
+            <p class="welcome-subtitle">Analyze DNS records and detect providers for any domain. Find out who hosts a website and what DNS services they use.</p>
+        </section>
+
+        <section class="info-section">
+            <h2 class="info-title">What is Cosignals?</h2>
+            <p>Cosignals is a Website Analysis tool that helps you discover which providers and services are used by any domain. Our tool analyzes DNS records including A, AAAA, MX, NS, and TXT records to identify hosting providers, email services, and other technology providers.</p>
+            
+            <h3>How It Works</h3>
+            <p>Simply enter a domain name above and our tool will:</p>
+            <ul>
+                <li>Retrieve all DNS records for the domain</li>
+                <li>Analyze IP addresses to identify hosting providers</li>
+                <li>Examine MX records to determine email providers</li>
+                <li>Analyze NS records to identify DNS providers</li>
+                <li>Check TXT records for verification and service information</li>
+            </ul>
+            
+            <h3>Use Cases</h3>
+            <p>Cosignals is useful for:</p>
+            <ul>
+                <li>Developers researching technology stacks</li>
+                <li>Marketing professionals analyzing competitor infrastructure</li>
+                <li>Security researchers verifying domain configurations</li>
+                <li>IT administrators troubleshooting DNS issues</li>
+            </ul>
+        </section>
+        {{ end }}
     </main>
-    {{ else }}
-    <section class="info-section">
-        <h2>What is Cosignals?</h2>
-        <p>Cosignals is a Website Analysis tool that helps you discover which providers and services are used by any domain. Our tool analyzes DNS records including A, AAAA, MX, NS, and TXT records to identify hosting providers, email services, and other technology providers.</p>
-        
-        <h3>How It Works</h3>
-        <p>Simply enter a domain name above and our tool will:</p>
-        <ul>
-            <li>Retrieve all DNS records for the domain</li>
-            <li>Analyze IP addresses to identify hosting providers</li>
-            <li>Examine MX records to determine email providers</li>
-            <li>Analyze NS records to identify DNS providers</li>
-            <li>Check TXT records for verification and service information</li>
-        </ul>
-        
-        <h3>Use Cases</h3>
-        <p>Cosignals is useful for:</p>
-        <ul>
-            <li>Developers researching technology stacks</li>
-            <li>Marketing professionals analyzing competitor infrastructure</li>
-            <li>Security researchers verifying domain configurations</li>
-            <li>IT administrators troubleshooting DNS issues</li>
-        </ul>
-    </section>
-    {{ end }}
-    
+
     <footer>
-        <p>&copy; 2025 Cosignals.com - Website Analysis Tool</p>
+        <div class="container">
+            <p>&copy; 2025 Cosignals.io - DNS Records & Website Analysis Tool</p>
+        </div>
     </footer>
-    
+
     <script>
         // Display error message if there's an empty hostname submission
         document.querySelector('form').addEventListener('submit', function(e) {
             const hostname = document.getElementById('hostname').value.trim();
             if (!hostname) {
                 e.preventDefault();
-                document.getElementById('error').textContent = 'Please enter a domain name';
+                
+                // Create error message if it doesn't exist
+                let errorMsg = document.querySelector('.error-message');
+                if (!errorMsg) {
+                    errorMsg = document.createElement('div');
+                    errorMsg.className = 'error-message';
+                    document.querySelector('.search-container').appendChild(errorMsg);
+                }
+                
+                errorMsg.textContent = 'Please enter a domain name';
             }
         });
     </script>

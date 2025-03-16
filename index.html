@@ -8,294 +8,53 @@
     <script src="https://cdn.usefathom.com/script.js" data-site="NBBVFAXG" defer></script>
     <!-- / Fathom -->
     <style>
+        /* Redirect page styles - this page will redirect to the main app */
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #fcfcfd;
+            color: #212529;
+        }
+        .redirect-container {
+            text-align: center;
+            padding: 2rem;
         }
         h1 {
-            color: #2c3e50;
+            color: #4a6cf7;
+            margin-bottom: 1rem;
         }
-        .input-group {
-            margin-bottom: 20px;
+        p {
+            margin-bottom: 1.5rem;
+            color: #5a6d84;
         }
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-        input[type="text"] {
-            padding: 8px;
-            width: 100%;
-            font-size: 16px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-        select {
-            padding: 8px;
-            font-size: 16px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-        button {
-            background-color: #3498db;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            font-size: 16px;
-            cursor: pointer;
-            border-radius: 4px;
-        }
-        button:hover {
-            background-color: #2980b9;
-        }
-        pre {
-            background-color: #f8f9fa;
-            padding: 15px;
-            border-radius: 4px;
-            overflow-x: auto;
-        }
-        .results {
-            margin-top: 30px;
-        }
-        .provider-list {
-            margin-top: 20px;
-        }
-        .provider-list span {
+        .redirect-link {
             display: inline-block;
-            background-color: #e0f7fa;
-            padding: 5px 10px;
-            margin: 5px;
-            border-radius: 15px;
+            background-color: #4a6cf7;
+            color: white;
+            text-decoration: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: background-color 0.3s;
         }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-            table-layout: fixed;
-        }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 12px;
-            text-align: left;
-            word-wrap: break-word;
-            overflow-wrap: break-word;
-        }
-        td:nth-child(2) {
-            max-width: 400px;
-            overflow-x: auto;
-        }
-        th {
-            background-color: #f2f2f2;
-            font-weight: bold;
-        }
-        tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-        .loading {
-            display: none;
-            margin-top: 20px;
-            text-align: center;
-        }
-        .error {
-            color: #e74c3c;
-            margin-top: 20px;
+        .redirect-link:hover {
+            background-color: #3859e0;
         }
     </style>
+    <script>
+        // Redirect to the main application page
+        window.location.href = '/';
+    </script>
 </head>
 <body>
-    <h1>Cosignals</h1>
-    
-    <div class="input-group">
-        <label for="hostname">Domain Name:</label>
-        <input type="text" id="hostname" placeholder="example.com" />
+    <div class="redirect-container">
+        <h1>Cosignals</h1>
+        <p>Redirecting to the Website Analysis Tool...</p>
+        <a href="/" class="redirect-link">Click here if you're not redirected automatically</a>
     </div>
-    
-    <!-- DNS provider selection removed - only using Google DNS -->
-    
-    <button id="analyze">Analyze Domain</button>
-    
-    <div id="loading" class="loading">Analyzing DNS records... Please wait.</div>
-    
-    <div id="error" class="error"></div>
-    
-    <div id="results" class="results" style="display: none;">
-        <h2>Results for <span id="result-hostname"></span></h2>
-        
-        <div class="provider-list">
-            <h3>Detected Providers:</h3>
-            <div id="providers"></div>
-        </div>
-        
-        <h3>DNS Records:</h3>
-        <table>
-            <thead>
-                <tr>
-                    <th>Type</th>
-                    <th>Data</th>
-                    <th>Provider</th>
-                </tr>
-            </thead>
-            <tbody id="records"></tbody>
-        </table>
-
-        <p>Query time: <span id="query-time"></span></p>
-    </div>
-    
-    <script>
-        // Function to analyze a domain
-        async function analyzeDomain(hostname, provider) {
-            // Reset previous results
-            document.getElementById('results').style.display = 'none';
-            document.getElementById('error').textContent = '';
-            
-            if (!hostname) {
-                document.getElementById('error').textContent = 'Please enter a domain name';
-                return;
-            }
-            
-            // Update the input field with the hostname
-            document.getElementById('hostname').value = hostname;
-            
-            // Show loading indicator
-            document.getElementById('loading').style.display = 'block';
-            
-            try {
-                const response = await fetch(`/api?hostname=${encodeURIComponent(hostname)}&provider=${provider}`);
-                
-                if (!response.ok) {
-                    throw new Error(`Error: ${response.status} ${response.statusText}`);
-                }
-                
-                const data = await response.json();
-                
-                // Hide loading indicator
-                document.getElementById('loading').style.display = 'none';
-                
-                // Display results
-                document.getElementById('result-hostname').textContent = data.hostname;
-                document.getElementById('query-time').textContent = data.query_time;
-                
-                // Display providers
-                const providersContainer = document.getElementById('providers');
-                providersContainer.innerHTML = '';
-                if (data.providers && data.providers.length > 0) {
-                    data.providers.forEach(provider => {
-                        const span = document.createElement('span');
-                        span.textContent = provider;
-                        providersContainer.appendChild(span);
-                    });
-                } else {
-                    providersContainer.textContent = 'No providers detected';
-                }
-                
-                // Display records
-                const recordsContainer = document.getElementById('records');
-                recordsContainer.innerHTML = '';
-                if (data.records && data.records.length > 0) {
-                    data.records.forEach(record => {
-                        const row = document.createElement('tr');
-                        
-                        const typeCell = document.createElement('td');
-                        typeCell.textContent = record.type;
-                        row.appendChild(typeCell);
-                        
-                        const dataCell = document.createElement('td');
-                        dataCell.textContent = record.data;
-                        row.appendChild(dataCell);
-                        
-                        const providerCell = document.createElement('td');
-                        providerCell.textContent = record.provider || 'Unknown';
-                        row.appendChild(providerCell);
-                        
-                        recordsContainer.appendChild(row);
-                    });
-                } else {
-                    const row = document.createElement('tr');
-                    const cell = document.createElement('td');
-                    cell.colSpan = 3;
-                    cell.textContent = 'No records found';
-                    row.appendChild(cell);
-                    recordsContainer.appendChild(row);
-                }
-                
-                // Show results
-                document.getElementById('results').style.display = 'block';
-                
-                // Update URL to reflect the hostname
-                updateURL(hostname);
-                
-            } catch (error) {
-                document.getElementById('loading').style.display = 'none';
-                document.getElementById('error').textContent = error.message || 'Error analyzing domain';
-                console.error(error);
-            }
-        }
-        
-        // Function to update the URL without reloading the page
-        function updateURL(hostname) {
-            const url = new URL(window.location);
-            
-            // Change the pathname to /hosts/{hostname}
-            url.pathname = `/hosts/${hostname}`;
-            
-            // Update the URL without triggering a page reload
-            window.history.pushState({}, '', url);
-        }
-        
-        // Check if we have a hostname in the URL path
-        function getHostnameFromURL() {
-            const path = window.location.pathname;
-            const match = path.match(/^\/hosts\/([^\/]+)$/);
-            
-            if (match && match[1]) {
-                return decodeURIComponent(match[1]);
-            }
-            
-            return null;
-        }
-        
-        // When the analyze button is clicked
-        document.getElementById('analyze').addEventListener('click', function() {
-            const hostname = document.getElementById('hostname').value.trim();
-            const provider = "google"; // Always use Google DNS
-            
-            if (hostname) {
-                analyzeDomain(hostname, provider);
-            }
-        });
-        
-        // Allow pressing Enter in the hostname field
-        document.getElementById('hostname').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                document.getElementById('analyze').click();
-            }
-        });
-        
-        // On page load, check for hostname in URL
-        window.addEventListener('load', function() {
-            const hostname = getHostnameFromURL();
-            if (hostname) {
-                const provider = "google"; // Always use Google DNS
-                analyzeDomain(hostname, provider);
-            }
-        });
-        
-        // Handle browser back/forward navigation
-        window.addEventListener('popstate', function() {
-            const hostname = getHostnameFromURL();
-            if (hostname) {
-                const provider = "google"; // Always use Google DNS
-                analyzeDomain(hostname, provider);
-            } else {
-                // Clear the results if we're back at the homepage
-                document.getElementById('results').style.display = 'none';
-                document.getElementById('hostname').value = '';
-            }
-        });
-    </script>
 </body>
 </html>
