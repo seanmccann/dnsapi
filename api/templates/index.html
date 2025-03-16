@@ -342,25 +342,14 @@
         /* TXT Records specific styling */
         .txt-record-data {
             font-family: SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-            word-break: break-all;
+            word-break: break-word;
             background-color: #f9fafc;
             padding: 12px;
             border-radius: 6px;
             line-height: 1.5;
             font-size: 0.85rem;
-            overflow-x: auto;
-        }
-        
-        .txt-record-entry {
-            margin-bottom: 10px;
-            padding-bottom: 10px;
-            border-bottom: 1px dashed var(--border-color);
-        }
-        
-        .txt-record-entry:last-child {
-            margin-bottom: 0;
-            padding-bottom: 0;
-            border-bottom: none;
+            max-width: 500px;
+            white-space: pre-wrap;
         }
         
         /* Info Section */
@@ -635,16 +624,22 @@
                             <div class="record-type">TXT Records</div>
                             <div class="record-count">{{ len $txtRecords }}</div>
                         </div>
-                        <div class="txt-records-container">
-                            {{ range $txtRecords }}
-                            <div class="txt-record-entry">
-                                <div class="txt-record-data">{{ .Data }}</div>
-                                {{ if .Provider }}
-                                <div class="record-provider" style="margin-top: 5px; padding-left: 12px;">Provider: {{ .Provider }}</div>
+                        <table class="record-table">
+                            <thead>
+                                <tr>
+                                    <th>Record Data</th>
+                                    <th>Provider</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{ range $txtRecords }}
+                                <tr>
+                                    <td class="record-data txt-record-data">{{ .Data }}</td>
+                                    <td class="record-provider">{{ if .Provider }}{{ .Provider }}{{ else }}Unknown{{ end }}</td>
+                                </tr>
                                 {{ end }}
-                            </div>
-                            {{ end }}
-                        </div>
+                            </tbody>
+                        </table>
                     </div>
                     {{ end }}
                 </div>
