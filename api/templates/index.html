@@ -521,7 +521,7 @@
                 <div class="records-section">
                     {{ $records := .Data.Records }}
                     
-                    {{ /* Group records by type */ }}
+                    {{- /* This is a comment to group records by type */ -}}
                     {{ $aRecords := slice }}
                     {{ $aaaaRecords := slice }}
                     {{ $mxRecords := slice }}
@@ -542,7 +542,7 @@
                         {{ end }}
                     {{ end }}
                     
-                    {{ /* Display A Records */ }}
+                    {{- /* Display A Records */ -}}
                     {{ if $aRecords }}
                     <div class="record-group">
                         <div class="record-group-header">
@@ -568,7 +568,7 @@
                     </div>
                     {{ end }}
                     
-                    {{ /* Display AAAA Records */ }}
+                    {{- /* Display AAAA Records */ -}}
                     {{ if $aaaaRecords }}
                     <div class="record-group">
                         <div class="record-group-header">
@@ -594,7 +594,7 @@
                     </div>
                     {{ end }}
                     
-                    {{ /* Display MX Records */ }}
+                    {{- /* Display MX Records */ -}}
                     {{ if $mxRecords }}
                     <div class="record-group">
                         <div class="record-group-header">
@@ -620,7 +620,7 @@
                     </div>
                     {{ end }}
                     
-                    {{ /* Display NS Records */ }}
+                    {{- /* Display NS Records */ -}}
                     {{ if $nsRecords }}
                     <div class="record-group">
                         <div class="record-group-header">
@@ -646,7 +646,7 @@
                     </div>
                     {{ end }}
                     
-                    {{ /* Display TXT Records */ }}
+                    {{- /* Display TXT Records */ -}}
                     {{ if $txtRecords }}
                     <div class="record-group">
                         <div class="record-group-header">
