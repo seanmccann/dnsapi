@@ -414,7 +414,9 @@ func fetchDNSData(hostname string, startTime time.Time) *JSONOutput {
 		return output.Records[i].Data < output.Records[j].Data
 	})
 	
-	output.QueryTime = elapsed.String()
+			// Format query time to show only 1 decimal place (e.g., "0.1s" instead of "0.123456789s")
+		elapsedSeconds := float64(elapsed) / float64(time.Second)
+		output.QueryTime = fmt.Sprintf("%.1fs", elapsedSeconds)
 	
 	return output
 }
