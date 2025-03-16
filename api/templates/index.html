@@ -519,30 +519,8 @@
                 </div>
 
                 <div class="records-section">
-                    {{ $records := .Data.Records }}
-                    
-                    {{- /* This is a comment to group records by type */ -}}
-                    {{ $aRecords := slice }}
-                    {{ $aaaaRecords := slice }}
-                    {{ $mxRecords := slice }}
-                    {{ $nsRecords := slice }}
-                    {{ $txtRecords := slice }}
-                    
-                    {{ range $records }}
-                        {{ if eq .Type "A" }}
-                            {{ $aRecords = append $aRecords . }}
-                        {{ else if eq .Type "AAAA" }}
-                            {{ $aaaaRecords = append $aaaaRecords . }}
-                        {{ else if eq .Type "MX" }}
-                            {{ $mxRecords = append $mxRecords . }}
-                        {{ else if eq .Type "NS" }}
-                            {{ $nsRecords = append $nsRecords . }}
-                        {{ else if eq .Type "TXT" }}
-                            {{ $txtRecords = append $txtRecords . }}
-                        {{ end }}
-                    {{ end }}
-                    
-                    {{- /* Display A Records */ -}}
+                    <!-- A Records -->
+                    {{ $aRecords := filterByType .Data.Records "A" }}
                     {{ if $aRecords }}
                     <div class="record-group">
                         <div class="record-group-header">
@@ -568,7 +546,8 @@
                     </div>
                     {{ end }}
                     
-                    {{- /* Display AAAA Records */ -}}
+                    <!-- AAAA Records -->
+                    {{ $aaaaRecords := filterByType .Data.Records "AAAA" }}
                     {{ if $aaaaRecords }}
                     <div class="record-group">
                         <div class="record-group-header">
@@ -594,7 +573,8 @@
                     </div>
                     {{ end }}
                     
-                    {{- /* Display MX Records */ -}}
+                    <!-- MX Records -->
+                    {{ $mxRecords := filterByType .Data.Records "MX" }}
                     {{ if $mxRecords }}
                     <div class="record-group">
                         <div class="record-group-header">
@@ -620,7 +600,8 @@
                     </div>
                     {{ end }}
                     
-                    {{- /* Display NS Records */ -}}
+                    <!-- NS Records -->
+                    {{ $nsRecords := filterByType .Data.Records "NS" }}
                     {{ if $nsRecords }}
                     <div class="record-group">
                         <div class="record-group-header">
@@ -646,7 +627,8 @@
                     </div>
                     {{ end }}
                     
-                    {{- /* Display TXT Records */ -}}
+                    <!-- TXT Records -->
+                    {{ $txtRecords := filterByType .Data.Records "TXT" }}
                     {{ if $txtRecords }}
                     <div class="record-group">
                         <div class="record-group-header">

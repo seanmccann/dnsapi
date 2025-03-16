@@ -237,8 +237,21 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	// Load the HTML template
-	tmpl, err := template.ParseFS(templateFS, "templates/index.html")
+	// Create a template with custom functions
+	funcMap := template.FuncMap{
+		"filterByType": func(records []RecordOutput, recordType string) []RecordOutput {
+			var filtered []RecordOutput
+			for _, record := range records {
+				if record.Type == recordType {
+					filtered = append(filtered, record)
+				}
+			}
+			return filtered
+		},
+	}
+	
+	// Load the HTML template with the function map
+	tmpl, err := template.New("index.html").Funcs(funcMap).ParseFS(templateFS, "templates/index.html")
 	if err != nil {
 		http.Error(w, fmt.Sprintf("Error loading template: %v", err), http.StatusInternalServerError)
 		return
