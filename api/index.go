@@ -272,6 +272,10 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 
 	// Set content type header
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	
+	// Set cache headers - content is static and can be cached for 24 hours
+	w.Header().Set("Cache-Control", "public, max-age=86400") // 24 hours in seconds
+	w.Header().Set("Expires", time.Now().Add(24*time.Hour).Format(time.RFC1123))
 
 	// Render the template with the data
 	pageData := PageData{
@@ -290,6 +294,10 @@ func handleAPIRequest(w http.ResponseWriter, hostname string, startTime time.Tim
 
 	// Set content type header
 	w.Header().Set("Content-Type", "application/json")
+	
+	// Set cache headers - DNS data is relatively static and can be cached for 24 hours
+	w.Header().Set("Cache-Control", "public, max-age=86400") // 24 hours in seconds
+	w.Header().Set("Expires", time.Now().Add(24*time.Hour).Format(time.RFC1123))
 
 	// Output the JSON
 	encoder := json.NewEncoder(w)
